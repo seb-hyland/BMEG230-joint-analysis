@@ -109,8 +109,8 @@ function process_data(dir, file_name)
     # Plot
     f = Figure()
     ax = Axis(f[1, 1],
-              xlabel = "Time (Frame)",
-              ylabel = "Joint Angle (Degrees)",
+              xlabel = "Time (s)",
+              ylabel = "Joint Angle (deg)",
               title = "Joint Angles Over Time")
     labels = ["Knee Angle", "Hip Angle", "Elbow Angle"]
     for (angles, label) in zip([sm_knee_angles, sm_hip_angles, sm_elbow_angles], labels)
