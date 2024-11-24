@@ -3,8 +3,8 @@ module JointAnalysis
 using CSV
 using DataFrames
 using LinearAlgebra
-using Plots
 using SavitzkyGolay
+using CairoMakie
 
 
 #=
@@ -107,16 +107,20 @@ function process_data(dir, file_name)
     time = frame / 30
     
     # Plot
-    p = plot(time, [sm_knee_angles, sm_hip_angles, sm_elbow_angles],
-             xlabel = "Time (Frame)",
-             ylabel = "Joint Angle (Degrees)",
-             title = "Joint Angles Over Time",
-             fontfamily = "Courier",
-             linewidth = 2,
-             thickness_scaling = 1,
-             palette = ["#FF4747", "#00BCB4", "#FFB547"],
-             label = ["Knee Angle" "Hip Angle" "Elbow Angle"])
-    savefig(p, "./figs/$(splitext(file_name)[1])_plot.svg")
+    f = Figure()
+    ax = Axis(f[1, 1],
+              xlabel = "Time (Frame)",
+              ylabel = "Joint Angle (Degrees)",
+              title = "Joint Angles Over Time")
+    labels = ["Knee Angle", "Hip Angle", "Elbow Angle"]
+    for (angles, label) in zip([sm_knee_angles, sm_hip_angles, sm_elbow_angles], labels)
+        lines!(ax,
+               time, angles,
+               linewidth=3,
+               label=label)
+    end
+    axislegend(position = :rb)
+    save("./figs/$(splitext(file_name)[1])_plot.svg", f)
 end
 
 
