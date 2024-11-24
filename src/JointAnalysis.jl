@@ -111,7 +111,7 @@ function process_data(dir, file_name)
              xlabel = "Time (Frame)",
              ylabel = "Joint Angle (Degrees)",
              title = "Joint Angles Over Time",
-             fontfamily = "Roboto-Regular",
+             fontfamily = "Courier",
              linewidth = 2,
              thickness_scaling = 1,
              palette = ["#FF4747", "#00BCB4", "#FFB547"],
