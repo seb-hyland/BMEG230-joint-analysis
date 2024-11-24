@@ -1,0 +1,11 @@
+* Joint Analysis for Bent Over Barbell Rows
+
+** Purpose
+This project contains a script for analysis of CSV motion capture data. It enables generation of plots to visualize joint angles over time.
+
+** Methods
+This script uses Julia - a modern language for mathematical computation - for data analysis and visualization. Data is imported from CSV files in the ~data~ subdirectory, and turned into ~.svg~ visualizations, which are saved to the ~figs~ subdirectory. A Savitzky-Golay filter with a window size of 9 frames and polynomial of order 3 is applied to smooth noise in the captured data.
+
+** Instructions
+To run the script, first install the Julia REPL. Then, in a console window, execute ~cd /path/to/project/root~ and activate the Julia REPL with ~julia~. Finally, 
+
