@@ -126,6 +126,9 @@ Main script, which iterates over every CSV file in the data directory and proces
 directory = "./data/"
 files = readdir(directory)
 csv_files = filter(f -> endswith(f, ".csv"), files)
+if !isdir("./figs")
+    mkdir("./figs")
+end
 for csv_file in csv_files
     process_data(directory, csv_file)
 end

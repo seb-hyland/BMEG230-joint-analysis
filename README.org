@@ -7,5 +7,11 @@ This project contains a script for analysis of CSV motion capture data. It enabl
 This script uses Julia - a modern language for mathematical computation - for data analysis and visualization. Data is imported from CSV files in the ~data~ subdirectory, and turned into ~.svg~ visualizations, which are saved to the ~figs~ subdirectory. A Savitzky-Golay filter with a window size of 9 frames and polynomial of order 3 is applied to smooth noise in the captured data.
 
 ** Instructions
-To run the script, first install the Julia REPL. Then, in a console window, execute ~cd /path/to/project/root~ and activate the Julia REPL with ~julia~. Finally, 
+To run the script, first install the Julia REPL. Then, in a console window, execute ~cd /path/to/JointAnalysis~ to set your working directory to the project directory.
+
+*** Install dependencies
+If this is your first time running JointAnalysis, ensure the necessary dependencies have been installed. To do this, execute ~julia --project=. -e 'using Pkg; Pkg.instantiate()'~.
+
+*** Run JointAnalysis
+To run the main script, execute ~julia --project=. src/JointAnalysis.jl~.
 
