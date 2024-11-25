@@ -42,6 +42,40 @@ end
 
 
 #=
+Calculate joint angle over time from 3 points, in 3 dimensions
+
+### Parameters:
+- `a_x`, `a_y`, `a_z`: Vectors representing the coordinates of the first point
+- `b_x`, `b_y`, `b_z`: Vectors representing the coordinates of the second point
+- `c_x`, `c_y`, `c_z`: Vectors representing the coordinates of the third point
+
+### Returns:
+- A `Vector{Float64}` describing the joint angle over time
+
+### Requirements:
+- All input vectors have the same length
+
+=#
+function calculate_2D_angles(a_y, a_z, b_y, b_z, c_y, c_z)
+    angles = Float64[]
+
+    for i in 1:length(a_y)
+        vec_1 = [a_y[i] - b_y[i], a_z[i] - b_z[i]]
+        vec_2 = [c_y[i] - b_y[i], c_z[i] - b_z[i]]
+        
+        norm_1 = normalize(vec_1)
+        norm_2 = normalize(vec_2)
+        
+        dot_product = dot(norm_1, norm_2)
+        angle = acos(dot_product)
+        push!(angles, rad2deg(angle))
+    end
+
+    return angles
+end
+
+
+#=
 Process data to plot knee, hip, and elbow angles over time, and plot the data with respect to time
 
 ### Parameters:
@@ -94,9 +128,14 @@ function process_data(dir, file_name)
     A_z = data.left_ankle_z
 
     # Calculate angles over time
-    knee_angles = calculate_angles(H_x, H_y, H_z, K_x, K_y, K_z, A_x, A_y, A_z)
-    hip_angles = calculate_angles(S_x, S_y, S_z, H_x, H_y, H_z, K_x, K_y, K_z)
-    elbow_angles = calculate_angles(S_x, S_y, S_z, E_x, E_y, E_z, W_x, W_y, W_z)
+#    knee_angles = calculate_angles(H_x, H_y, H_z, K_x, K_y, K_z, A_x, A_y, A_z)
+#    hip_angles = calculate_angles(S_x, S_y, S_z, H_x, H_y, H_z, K_x, K_y, K_z)
+#    elbow_angles = calculate_angles(S_x, S_y, S_z, E_x, E_y, E_z, W_x, W_y, W_z)
+
+    # Calculate angles over time
+    knee_angles = calculate_2D_angles(H_y, H_z, K_y, K_z, A_y, A_z)
+    hip_angles = calculate_2D_angles(S_y, S_z, H_y, H_z, K_y, K_z)
+    elbow_angles = calculate_2D_angles(S_y, S_z, E_y, E_z, W_y, W_z)
 
     # Smooth data
     sm_knee_angles = savitzky_golay(knee_angles, 9, 3).y
@@ -113,6 +152,23 @@ function process_data(dir, file_name)
               ylabel = "Joint Angle (deg)",
               title = "Joint Angles Over Time")
     labels = ["Knee Angle", "Hip Angle", "Elbow Angle"]
+    for (angles, label) in zip([knee_angles, hip_angles, elbow_angles], labels)
+        lines!(ax,
+               time, angles,
+               linewidth=3,
+               label=label)
+    end
+    axislegend(position = :rb)
+    save("./figs/$(splitext(file_name)[1]).svg", f)
+
+
+    # Plot filtered
+    g = Figure()
+    ax = Axis(g[1, 1],
+              xlabel = "Time (s)",
+              ylabel = "Joint Angle (deg)",
+              title = "Joint Angles Over Time")
+    labels = ["Knee Angle", "Hip Angle", "Elbow Angle"]
     for (angles, label) in zip([sm_knee_angles, sm_hip_angles, sm_elbow_angles], labels)
         lines!(ax,
                time, angles,
@@ -120,7 +176,7 @@ function process_data(dir, file_name)
                label=label)
     end
     axislegend(position = :rb)
-    save("./figs/$(splitext(file_name)[1])_plot.svg", f)
+    save("./figs/$(splitext(file_name)[1])_filtered.svg", g)
 end
 
 
